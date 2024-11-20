@@ -1484,12 +1484,13 @@ FunctionDeclaration(path) {
 
 只需使用parentPath：` path.parentPath </>调用<code> replaceWith </>即可</p>
 
-<pre><code class="js">BinaryExpression(path) {
+```js
+BinaryExpression(path) {
   path.parentPath.replaceWith(
     t.expressionStatement(t.stringLiteral("Anyway the wind blows, doesn't really matter to me, to me."))
   );
 }
-`</pre> 
+```
 
 ```diff
   function square(n) {
@@ -1553,12 +1554,13 @@ FunctionDeclaration(path) {
 
 有时你可能想要推送一个` VariableDeclaration </>，这样你就可以分配给它。</p>
 
-<pre><code class="js">FunctionDeclaration(path) {
+```js
+FunctionDeclaration(path) {
   const id = path.scope.generateUidIdentifierBasedOnNode(path.node.id);
   path.remove();
   path.scope.parent.push({ id, init: path.node });
 }
-`</pre> 
+```
 
 ```diff
 - function square(n) {
@@ -1619,7 +1621,8 @@ FunctionDeclaration(path) {
 
 这些选项会通过`状态</>对象传递给插件访问者：</p>
 
-<pre><code class="js">export default function({ types: t }) {
+```js
+export default function({ types: t }) {
   return {
     visitor: {
       FunctionDeclaration(path, state) {
@@ -1629,7 +1632,7 @@ FunctionDeclaration(path) {
     }
   }
 }
-`</pre> 
+```
 
 这些选项是特定于插件的，您不能访问其他插件中的选项。
 
@@ -1685,17 +1688,18 @@ export default function({ types: t }) {
 
 该错误看起来像：
 
-    file.js: Error message here
-       7 |
-       8 | let tips = [
-    >  9 |   "Click on any AST node with a '+' to expand it",
-         |   ^
-      10 |
-      11 |   "Hovering over a node highlights the \
-      12 |    corresponding part in the source code",
-    
+```
+file.js: Error message here
+   7 |
+   8 | let tips = [
+>  9 |   "Click on any AST node with a '+' to expand it",
+     |   ^
+  10 |
+  11 |   "Hovering over a node highlights the \
+  12 |    corresponding part in the source code",
+```
 
-* * *
+----
 
 # <a id="toc-building-nodes"></a>构建节点
 
@@ -1707,7 +1711,8 @@ export default function({ types: t }) {
 
 <p>节点定义如下所示：</p>
 
-<pre><code class="js">defineType("MemberExpression", {
+```js
+defineType("MemberExpression", {
   builder: ["object", "property", "computed"],
   visitor: ["object", "property"],
   aliases: ["Expression", "LVal"],
@@ -1726,7 +1731,7 @@ export default function({ types: t }) {
     }
   }
 });
-`</pre> 
+```
 
 在这里你可以看到关于这个特定节点类型的所有信息，包括如何构建它，遍历它，并验证它。
 
@@ -1739,7 +1744,8 @@ export default function({ types: t }) {
 > 请注意，有时在节点上可以定制的属性比``构建器</>数组包含的属性更多。 这是为了防止生成器有太多的参数。 在这些情况下，您需要手动设置属性。 一个例子是<class> ClassMethod </>.</p>
 </blockquote>
 
-<pre><code class="js">// Example
+```js
+// Example
 // because the builder doesn't contain `async` as a property
 var node = t.classMethod(
   "constructor",
@@ -1749,11 +1755,12 @@ var node = t.classMethod(
 )
 // set it manually after creation
 node.async = true;
-``</pre> 
+```
+
 > 
 > You can see the validation for the builder arguments with the `fields` object.
 > 
-> ```js
+```js
 fields: {
   object: {
     validate: assertNodeType("Expression")
@@ -2092,20 +2099,23 @@ if (bar) console.log(bar);"
 
 <p>除了快照测试外，我们还可以手动检查AST。 这是一个简单但是脆弱的例子。 对于更多涉及的情况，您可能希望利用Babel-遍历。 它允许您用<code>访问者</>键指定一个对象，就像您使用插件本身。</p>
 
-<pre><code class="js">it('contains baz', () => {
+
+```js
+it('contains baz', () => {
   const {ast} = babel.transform(example, {plugins: [plugin]});
   const program = ast.program;
   const declaration = program.body[0].declarations[0];
   assert.equal(declaration.id.name, 'baz');
   // or babelTraverse(program, {visitor: ...})
 });
-`</pre> 
+```
 
 ### Exec Tests
 
 在这里，我们将转换代码，然后评估它的行为是否正确。 请注意，我们在测试中没有使用``assert</>。 这确保如果我们的插件做了奇怪的操作，如意外删除断言线，但测试仍然失败。</p>
 
-<pre><code class="js">it('foo is an alias to baz', () => {
+```js
+it('foo is an alias to baz', () => {
   var input = `
     var foo = 1;
     // test that foo was renamed to baz
@@ -2119,7 +2129,7 @@ if (bar) console.log(bar);"
   var res = f();
   assert(res === 1, 'res is 1');
 });
-``</pre> 
+```
 
 Babel核心使用类似的方法</>去获取快照和执行测试。</p> 
 
